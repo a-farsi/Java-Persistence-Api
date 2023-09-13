@@ -37,4 +37,77 @@ Nous avons, a priori, plusieurs choix pour le type de cette clé primaire. Les c
 Donc, notre classe Musicien, avec son champ technique, peut maintenant être sauvegardée en base de données et être gérée par notre module JPA. À présent, nous devons ajouter un certain nombre d'éléments techniques, qui sont en fait des annotations. Ces annotations seront utilisées par JPA comme des métadonnées appliquées à différents éléments de la classe Musicien.
 
 La première de ces annotations est @Entity, qui doit être posée sur la classe Musicien. Cette annotation permet à JPA de reconnaître que cette classe est une entité JPA et de la gérer en tant que telle.
+Une autre annotation que nous pouvons aposer sur notre entité est @Table qui nous permet de renommer le nom de la table si nous le souhaitons.
 
+```java
+@Table(name="Musicien")
+@Entity
+public class Musicien {
+   // ...
+}
+```
+
+La deuxième annotation obligatoire est @Id, que nous plaçons sur le champ de la clé primaire de notre classe. Ce champ de la clé primaire est nécessaire, car il indique à JPA quel champ représente la clé primaire, en l'occurrence le champ "id". En réalité, en toute rigueur, ces deux éléments suffisent à faire fonctionner notre classe en tant qu'entité JPA.
+```java
+@Table(name="Musicien")
+@Entity
+public class Musicien {
+    @Id
+    private Long id;
+    private String name;
+    private Date dateOfBirth;
+    private MusicType musicType;
+    // getters
+    // setters
+}
+```
+Cependant, les choses ne sont pas tout à fait terminées, car nous avons besoin d'affiner nos métadonnées, notamment les éléments optionnels. Le premier de ces éléments optionnels consiste à indiquer à JPA comment notre clé primaire est générée.
+
+Si nous ne souhaitons pas déléguer à JPA la génération de la clé primaire et préférons que notre application génère cette valeur (ce sera à nous de fixer le champ "id" de la clé primaire correctement, et ce sera à notre code d'application de s'assurer que la valeur de la clé primaire insérée dans un objet n'est pas déjà utilisée en base de données). Ce problème est assez complexe, il semble plus simple de déléguer cette génération à l'implémentation JPA elle-même.
+
+Pour cela nous aposons l'annotation @GeneratedValue sur l'identidiant de notre classe. Cette annotation dispose de 4 stratégies qui sont les suivantes : 
+
+--AUTO : Le fournisseur JPA (Hibernate) détermine la meilleure méthode de génération de clé primaire à utiliser en fonction de la base de données spécifique. Il choisira alors la stratégie la plus appropriée parmi les autres stratégies possibles (IDENTITY, SEQUENCE, ou TABLE).
+
+--IDENTITY: la clé primaire devrait être générée en utilisant une colonne d'identité dans la base de données.
+Elle est souvent utilisée avec des bases de données telles que MySQL et SQL Server, où des colonnes à incrémentation automatique sont utilisées pour la génération de clés primaires.
+
+
+--SEQUENCE - la clé primaire devrait être générée en utilisant une séquence de base de données. Les séquences sont généralement utilisées dans des bases de données telles qu'Oracle et PostgreSQL pour générer des valeurs numériques uniques. L'utilisation de cette stratégie nécessite l'utilisation de l'annotation @SequenceGenerator.
+
+--TABLE - utilise une table dédiée qui stocke les clés des tables générées. L'utilisation de cette stratégie nécessite l'utilisation de l'annotation @TableGenerator
+ 
+
+```java
+@Table(name="Musicien")
+@Entity
+public class Musicien {
+    @Id
+    private Long id;
+    private String name;
+    private Date dateOfBirth;
+    private MusicType musicType;
+    // getters
+    // setters
+}
+```
+
+Le deuxième élément à prendre en compte est que certains champs de notre bean java seront automatiquement pris en charge par JPA pour être stockés dans des colonnes de la table Musicien, tandis que d'autres ne le seront pas.
+
+Les champs qui sont mappés par défaut (c'est-à-dire pris en charge par JPA) sont les types primitifs java, les champs associés au type primitif et les champs de chaînes de caractères. En revanche, les champs d'un autre type doivent être annotés avec des annotations JPA pour pouvoir être enregistrés en base de données. C'est le cas du champ de type Date qui n'est pas mappé par défaut par JPA. Il doit être annoté avec l'annotation @Temporal, précédée du type de date à préserver dans ce champ : s'agit-il d'une date au format jj/mm/aaaa ou d'une date comprenant également l'heure, les minutes et les secondes, jj/mm/aaa/hh/min/seconde, par exemple. Ces trois formats sont des types SQL bien connus, donc avec l'annotation @Temporal, nous précisons le type de date que nous souhaitons enregistrer en base.
+
+
+Nous pouvons également ajouter des métadonnées optionnelles sur les différents champs de notre classe. En l'occurrence, pour enregistrer les noms de nos Musiciens, nous souhaitons préciser les noms des colonnes dans lesquelles les champs 'nom' seront enregistrés. Ce type de métadonnée optionnelle peut être ajouté grâce à l'annotation @Column(…). Cette annotation peut également nous permettre de définir la longueur des champs 'nom'. Par défaut, JPA enregistre les chaînes de caractères dans des colonnes de type varchar avec une longueur de 256 caractères, ce qui peut être surdimensionné pour notre application.
+
+```java
+@Table(name="Musicien")
+@Entity
+public class Musicien {
+    
+    @Column(name="name", length=80)
+    private String name;
+
+    // getters
+    // setters
+}
+```
