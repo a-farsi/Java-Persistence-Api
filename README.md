@@ -142,9 +142,7 @@ Ce champ MusicType, qui ne peut prendre que ces quatre valeurs, peut être mapp�
 
 Nous avons configuré notre classe en tant qu'entité JPA. Nous devons maintenant tester ce modèle, et pour cela, nous avons besoin d'intégrer une base de données dans notre environnement de développement. La solution locale que nous allons choisir est une base de données MySQL. Notre objectif est également de montrer que nous pouvons parfaitement utiliser JPA avec un serveur de base de données spécifique, en l'occurrence MySQL dans un environnement de développement, et le déployer en production avec un autre serveur de base de données, en l'occurrence Oracle.
 
-<span style="color:red">some *# Configuration JPA* text</span>
+# Configuration JPA
+
 Comment indiquons-nous à JPA qu'elle doit se connecter à une base de données particulière plutôt qu'à une autre ? Comment lui précisons-nous que nos classes sont stockées dans tel module de notre application plutôt que dans tel autre ? Comment lui expliquons-nous comment elle doit, par exemple, journaliser ses requêtes SQL qu'elle envoie à la base de données, etc. ? Toutes ces questions trouvent une réponse unique dans un fichier de configuration appelé le "persistence.xml". Ce fichier regroupe toutes les informations techniques nécessaires à JPA car il rassemble des métadonnées qui ne peuvent pas être exprimées au niveau des différentes classes de nos entités JPA
 
-<span style="color:red">
-Text content
-</span>
