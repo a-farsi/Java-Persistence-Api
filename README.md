@@ -37,10 +37,8 @@ Nous avons, a priori, plusieurs choix pour le type de cette clé primaire. Les c
 Donc, notre classe Musicien, avec son champ technique, peut maintenant être sauvegardée en base de données et être gérée par notre module JPA. À présent, nous devons ajouter un certain nombre d'éléments techniques, qui sont en fait des annotations. Ces annotations seront utilisées par JPA comme des métadonnées appliquées à différents éléments de la classe Musicien.
 
 La première de ces annotations est @Entity, qui doit être posée sur la classe Musicien. Cette annotation permet à JPA de reconnaître que cette classe est une entité JPA et de la gérer en tant que telle.
-Une autre annotation que nous pouvons aposer sur notre entité est @Table qui nous permet de renommer le nom de la table si nous le souhaitons.
 
 ```java
-@Table(name="Musicien")
 @Entity
 public class Musicien {
    // ...
@@ -49,7 +47,6 @@ public class Musicien {
 
 La deuxième annotation obligatoire est @Id, que nous plaçons sur le champ de la clé primaire de notre classe. Ce champ de la clé primaire est nécessaire, car il indique à JPA quel champ représente la clé primaire, en l'occurrence le champ "id". En réalité, en toute rigueur, ces deux éléments suffisent à faire fonctionner notre classe en tant qu'entité JPA.
 ```java
-@Table(name="Musicien")
 @Entity
 public class Musicien {
     @Id
@@ -57,6 +54,17 @@ public class Musicien {
     private String name;
     private Date dateOfBirth;
     private MusicType musicType;
+    // getters
+    // setters
+}
+```
+Une autre annotation que nous pouvons aposer sur notre entité est @Table qui nous permet de renommer le nom de la table si nous le souhaitons car par default la table prend le nom de la classe.
+
+```java
+@Table(name="Musicien")
+@Entity
+public class Musicien {
+    // attributes
     // getters
     // setters
 }
@@ -83,6 +91,7 @@ Elle est souvent utilisée avec des bases de données telles que MySQL et SQL Se
 @Entity
 public class Musicien {
     @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private Date dateOfBirth;
@@ -103,11 +112,31 @@ Nous pouvons également ajouter des métadonnées optionnelles sur les différen
 @Table(name="Musicien")
 @Entity
 public class Musicien {
-    
+    @Id
+    @GeneratedValue
+    private Long id;
     @Column(name="name", length=80)
     private String name;
-
+    @Temporal
+    private Date dateOfBirth;
+    private MusicType musicType;
     // getters
     // setters
 }
 ```
+
+Ces champs colonnes, qui permettent notamment de préciser les noms des colonnes, nous permettent de nous adapter à une table Musicien qui existe déjà. Grâce à ces métadonnées, nous pouvons en fait adapter un nouveau modèle objet à un schéma de base de données legacy (qui existait déjà avant l'application que nous sommes en train de construire).
+
+Enfin, il reste le cas du champ "MusicType", qui est particulier. Il s'agit d'une énumération (une classe Java particulière appelée "énumération" et dont nous fixons les instances lors de la déclaration de la classe). En l'occurrence, notre énumération ne peut avoir que quatre instances : JAZZ, CLASSICAL, ROCK et FOLK.
+
+```java
+public class MusicType {
+    JAZZ, CLASSIC, ROCK, FOLK
+}
+```
+Ce champ MusicType, qui ne peut prendre que ces quatre valeurs, peut être mappé de deux manières différentes en base de données. 
+
+La première consiste à enregistrer le numéro d'ordre de l'instance telle qu'elle a été déclarée dans l'énumération MusicType, donc 0 pour JAZZ, 1 pour CLASSICAL, 2 pour ROCK et 3 pour FOLK.
+
+La deuxième manière est de le mapper sous forme de chaînes de caractères, c'est-à-dire d'écrire explicitement en base de données le nom de l'instance (JAZZ, CLASSICAL, …). C'est d'ailleurs la méthode que nous allons utiliser ici, pour deux raisons. Premièrement, c'est une question de lisibilité : il sera plus simple de comprendre quelles valeurs d'énumération ont été enregistrées pour les lignes de notre table lorsque nous examinerons uniquement le contenu de la base. De plus, pour des raisons d'évolution de notre modèle, si jamais quelqu'un intervertit CLASSICAL et JAZZ, éventuellement sans le savoir, cela modifiera également les numéros d'ordre des instances dans cette énumération et donc changera les valeurs enregistrées dans notre base.
+
