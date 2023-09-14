@@ -134,9 +134,17 @@ public class MusicType {
     JAZZ, CLASSIC, ROCK, FOLK
 }
 ```
-Ce champ MusicType, qui ne peut prendre que ces quatre valeurs, peut être mappé de deux manières différentes en base de données. 
+Ce champ MusicType, qui ne peut prendre que ces quatre valeurs, peut être mappé de deux manières différentes en base de données :
 
-La première consiste à enregistrer le numéro d'ordre de l'instance telle qu'elle a été déclarée dans l'énumération MusicType, donc 0 pour JAZZ, 1 pour CLASSICAL, 2 pour ROCK et 3 pour FOLK.
+* La première consiste à enregistrer le numéro d'ordre de l'instance telle qu'elle a été déclarée dans l'énumération MusicType, donc 0 pour JAZZ, 1 pour CLASSICAL, 2 pour ROCK et 3 pour FOLK.
 
-La deuxième manière est de le mapper sous forme de chaînes de caractères, c'est-à-dire d'écrire explicitement en base de données le nom de l'instance (JAZZ, CLASSICAL, …). C'est d'ailleurs la méthode que nous allons utiliser ici, pour deux raisons. Premièrement, c'est une question de lisibilité : il sera plus simple de comprendre quelles valeurs d'énumération ont été enregistrées pour les lignes de notre table lorsque nous examinerons uniquement le contenu de la base. De plus, pour des raisons d'évolution de notre modèle, si jamais quelqu'un intervertit CLASSICAL et JAZZ, éventuellement sans le savoir, cela modifiera également les numéros d'ordre des instances dans cette énumération et donc changera les valeurs enregistrées dans notre base.
+* La deuxième manière est de le mapper sous forme de chaînes de caractères, c'est-à-dire d'écrire explicitement en base de données le nom de l'instance (JAZZ, CLASSICAL, …). C'est d'ailleurs la méthode que nous allons utiliser ici, pour deux raisons. Premièrement, c'est une question de lisibilité : il sera plus simple de comprendre quelles valeurs d'énumération ont été enregistrées pour les lignes de notre table lorsque nous examinerons uniquement le contenu de la base. De plus, pour des raisons d'évolution de notre modèle, si jamais quelqu'un intervertit CLASSICAL et JAZZ, éventuellement sans le savoir, cela modifiera également les numéros d'ordre des instances dans cette énumération et donc changera les valeurs enregistrées dans notre base.
 
+Nous avons configuré notre classe en tant qu'entité JPA. Nous devons maintenant tester ce modèle, et pour cela, nous avons besoin d'intégrer une base de données dans notre environnement de développement. La solution locale que nous allons choisir est une base de données MySQL. Notre objectif est également de montrer que nous pouvons parfaitement utiliser JPA avec un serveur de base de données spécifique, en l'occurrence MySQL dans un environnement de développement, et le déployer en production avec un autre serveur de base de données, en l'occurrence Oracle.
+
+<span style="color:red">some *# Configuration JPA* text</span>
+Comment indiquons-nous à JPA qu'elle doit se connecter à une base de données particulière plutôt qu'à une autre ? Comment lui précisons-nous que nos classes sont stockées dans tel module de notre application plutôt que dans tel autre ? Comment lui expliquons-nous comment elle doit, par exemple, journaliser ses requêtes SQL qu'elle envoie à la base de données, etc. ? Toutes ces questions trouvent une réponse unique dans un fichier de configuration appelé le "persistence.xml". Ce fichier regroupe toutes les informations techniques nécessaires à JPA car il rassemble des métadonnées qui ne peuvent pas être exprimées au niveau des différentes classes de nos entités JPA
+
+<span style="color:red">
+Text content
+</span>
