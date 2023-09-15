@@ -221,6 +221,14 @@ Cependant, nous avons également d'autres paramètres qui peuvent être spécifi
     </properties>
 ```    
 
+Qu'est-ce que ces paires clé-valeur nous indiquent ici, et qu'est-ce que ces propriétés nous disent ? Elles nous informent simplement de notre intention de rédiger les scripts de création et de suppression de nos schémas de table dans deux fichiers distincts : 'create.sql' et 'drop.sql', stockés dans un répertoire nommé 'sql'. Cette information se révèle précieuse lors du développement, car elle précise l'emplacement du répertoire 'sql', qui doit être situé dans notre projet Eclipse. Cependant, en production, ces deux propriétés doivent être supprimées.
+
+Les deux dernières propriétés indiquent à EclipseLink comment traiter ces deux scripts de création et de suppression de notre base de données. Faut-il les diriger uniquement vers les fichiers, auquel cas nous serions responsables de leur exécution pour créer le schéma de la base de données ? Ou bien faut-il les acheminer exclusivement vers la base de données pour une création automatique du schéma au démarrage de notre application ? Ou encore, faut-il choisir les deux options : créer automatiquement le schéma en base de données tout en conservant une trace des scripts de création et de suppression dans des fichiers ?
+
+En mode développement, le dernier mode se révèle pratique, car il combine la création automatique du schéma avec la sauvegarde des commandes SQL dans un fichier, que nous pouvons ensuite versionner, par exemple.
+
+Enfin, ces dernières propriétés nous permettent de spécifier ce qu'EclipseLink journalisera. EclipseLink, tout comme OpenJPA et Hibernate, a la capacité d'enregistrer une grande quantité d'informations sur la façon dont il traite nos données. Cela va de la charge des classes à l'analyse de ces classes. Il peut journaliser chaque classe, chaque champ, ainsi que la manière dont il interprète l'ensemble des annotations que nous avons ajoutées à nos classes et à nos champs, jusqu'aux requêtes SQL envoyées à la base de données. Bien entendu, la configuration de cette journalisation doit être ajustée en fonction du mode, qu'il s'agisse du mode développement ou du mode production, principalement pour des raisons de performances. Le fait de journaliser l'intégralité d'une requête SQL a un impact notable sur l'exécution de notre application.
+
 
 
 
